@@ -19,6 +19,8 @@ sudo apt-get --assume-yes upgrade
 sudo apt-get --assume-yes install tmux build-essential gcc g++ make binutils
 sudo apt-get --assume-yes install software-properties-common
 
+
+
 # download and install GPU drivers
 wget "http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.44-1_amd64.deb" -O "cuda-repo-ubuntu1604_8.0.44-1_amd64.deb"
 
@@ -51,6 +53,10 @@ conda create -y -n py27 python=2.7 anaconda
 source activate py27
 conda upgrade -y --all
 
+#install imagemagick for image transformations for data processing
+sudo apt-get install imagemagick
+
+
 # install and configure theano
 pip install theano
 echo "[global]
@@ -62,6 +68,7 @@ root = /usr/local/cuda" > ~/.theanorc
 
 #install keras, pytorch, editing .json for TF later
 pip install keras=1.2.2
+pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.1.0-cp27-none-linux_x86_64.whl
 conda install -y pytorch torchvision cuda80 -c soumith
 pip install keras-tqdm
 source deactivate
@@ -97,7 +104,7 @@ c.NotebookApp.open_browser = False" >> $HOME/.jupyter/jupyter_notebook_config.py
 #add conda envs
 source activate py27
 
-python -m ipykernel install --user --name py27 --display-name "Python2 (Keras1Theano)"
+python -m ipykernel install --user --name py27 --display-name "Python2 (Keras1TheanoPT)"
 pip install xgboost
 conda install -y bcolz
 easy_install --upgrade gensim
@@ -106,7 +113,7 @@ source deactivate
 #for the other env
 source activate k2
 
-python -m ipykernel install --user --name k2 --display-name "Python3 (TensorFlowK2.0)"
+python -m ipykernel install --user --name k2 --display-name "Python3 (TensorflowK2.0PT)"
 pip install xgboost
 conda install -y bcolz
 easy_install --upgrade gensim
@@ -118,3 +125,6 @@ cd ~
 git clone https://github.com/fastai/courses.git
 echo "\"jupyter notebook\" will start Jupyter on port 8888"
 echo "If you get an error instead, try restarting your session so your $PATH is updated"
+echo "Your environment with Python 2.7 and Theano, Keras1.2.2, and Pytorch is named: py27"
+echo "Python 3.6 environment with TF, PyTorch, and Keras 2.0 is named: k2"
+echo "Note: Keras is initially configured for TensorFlow, NOT Theano"
