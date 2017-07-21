@@ -7,6 +7,7 @@
 # within each environment it will install advanced packages for common deep-learning utilities
 # Keras will be setup for tensorflow, NOT theano
 # Jupyter notebook, configured for a server
+# Installs Facets, the Google data visualization program
 
 # ###########
 # MODIFIED FOR PYTHON 3.6, TENSORFLOW, KERAS 2, PYTORCH, AND SERVER FACING JUPYTER NOTEBOOK
@@ -47,6 +48,14 @@ tar -zxf cudnn.tgz
 cd cuda
 sudo cp lib64/* /usr/local/cuda/lib64/
 sudo cp include/* /usr/local/cuda/include/
+export CUDA_HOME=/usr/local/cuda
+export PATH=${CUDA_HOME}/bin:${PATH}
+export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
+
+#install nvidia-docker
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
+sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
+
 
 #continue from here...install python 2.7 env
 conda create -y -n py27 python=2.7 anaconda
@@ -67,7 +76,7 @@ floatX = float32
 root = /usr/local/cuda" > ~/.theanorc
 
 #install keras, pytorch, editing .json for TF later
-pip install keras=1.2.2
+pip install keras==1.2.2
 pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.1.0-cp27-none-linux_x86_64.whl
 conda install -y pytorch torchvision cuda80 -c soumith
 pip install keras-tqdm
@@ -100,6 +109,15 @@ mkdir $HOME/.jupyter/
 echo "c.NotebookApp.password = u'"$jupass"'" >> $HOME/.jupyter/jupyter_notebook_config.py
 echo "c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False" >> $HOME/.jupyter/jupyter_notebook_config.py
+pip install https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master
+pip install keras-tqdm
+sudo pip install keras-vis
+jupyter contrib nbextension install --user
+cd ~
+git clone https://github.com/PAIR-code/facets
+jupyter nbextension install facets-dist
+
+
 
 #add conda envs
 source activate py27
